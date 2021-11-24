@@ -21,6 +21,17 @@ It adds new connector to connect DB.
 Closes #1
 ```
 
+**NOTE:** If you commit a change that should not be merged so far, add "WIP" to the first line to prevent merging unfinished work.
+
+Example:
+```
+WIP minor: Add new connector
+
+It adds new connector to connect DB.
+
+Closes #1
+```
+
 ## Workflow
 
 1. Choose a new task (issue) on the [project board](https://github.com/users/JanMate/projects/2) and move it into "**In progress**" column.
