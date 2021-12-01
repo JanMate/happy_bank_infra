@@ -35,6 +35,7 @@ jobs:
         run: |
           git config --global user.name "Jan Matějka"
           git config --global user.email "jan.matejka142@gmail.com"
+          echo -en "machine github.com\nlogin JanMate\npassword ${{ secrets.GITHUB_TOKEN }}" > ~/.netrc
       
       - name: Run all shell scripts in this repo
         run: find . -type f -and -name "*.sh" -exec bash -c {} \;
@@ -43,3 +44,4 @@ jobs:
         run: |
           git config --global --unset user.name
           git config --global --unset user.email
+          rm -f ~/.netrc
