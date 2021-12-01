@@ -32,4 +32,9 @@ jobs:
         run: find . -type f -and -name "*.sh" -exec chmod u+x {} \;
 
       - name: Run all shell scripts in this repo
-        run: find . -type f -and -name "*.sh" -exec bash -c {} \;
+        run: |
+          git config --global user.name "Jan Matějka"
+          git config --global user.email "jan.matejka142@gmail.com"
+          find . -type f -and -name "*.sh" -exec bash -c {} \;
+          git config --global -unset user.name
+          git config --global -unset user.email
