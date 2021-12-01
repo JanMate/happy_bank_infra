@@ -38,7 +38,11 @@ jobs:
           echo -en "machine github.com\nlogin JanMate\npassword ${{ secrets.GITHUB_TOKEN }}" > ~/.netrc
       
       - name: Run all shell scripts in this repo
-        run: find . -type f -and -name "*.sh" -exec bash -c {} \;
+        run: |
+          find . -type f -and -name "*.sh" -exec bash -c {} \;
+          repo_url=https://github.com/JanMate/happy_bank_core.git
+          git clone "${repo_url}"
+          git ls-remote "${repo_url}"
       
       - name: Clean git global config due to git clone script
         run: |
