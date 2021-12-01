@@ -18,7 +18,7 @@ fi
 # Clone the "happy_bank_core" repo from Github
 echo -e "${RED}Cloning remote repository..${NC}"
 git clone $remote_repo_path
-cd happy_bank_core
+cd happy_bank_core || exit
 
 # Create a new branch "update-readme" and checkout it
 echo -e "${RED}Created new branch:${NC}"
