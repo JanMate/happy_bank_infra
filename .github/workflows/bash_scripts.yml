@@ -31,5 +31,15 @@ jobs:
       - name: Set shell scripts executable
         run: find . -type f -and -name "*.sh" -exec chmod u+x {} \;
 
+      - name: Set git global config due to git clone script
+        run: |
+          git config --global user.name "Jan Matějka"
+          git config --global user.email "jan.matejka142@gmail.com"
+      
       - name: Run all shell scripts in this repo
         run: find . -type f -and -name "*.sh" -exec bash -c {} \;
+      
+      - name: Clean git global config due to git clone script
+        run: |
+          git config --global --unset user.name
+          git config --global --unset user.email
