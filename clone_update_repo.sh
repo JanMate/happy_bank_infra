@@ -8,8 +8,8 @@ NC='\033[0m'
 echo -e "${RED}Timestamp:${NC} Script has started at $(date +%T)"
 
 #Verify if remote repository exists
-remote_repo_path=https://github.com/JanMate/happy_bank_core.git
-remote_repo_ls=$(git ls-remote $remote_repo_path)
+remote_repo_url=https://github.com/JanMate/happy_bank_core.git
+remote_repo_ls=$(git ls-remote $remote_repo_url)
 if [[ -z "$remote_repo_ls" ]]; then
   echo "Remote repository doesn't exist or empty, script has ended at $(date +%T)"
   exit
@@ -17,18 +17,18 @@ fi
 
 # Clone the "happy_bank_core" repo from Github
 echo -e "${RED}Cloning remote repository..${NC}"
-git clone $remote_repo_path
+git clone $remote_repo_url
 cd happy_bank_core || exit
 
 # Create a new branch "update-readme" and checkout it
 echo -e "${RED}Created new branch:${NC}"
 new_branch_name=update-readme
-git checkout -b $new_branch_name
+git checkout -b "$new_branch_name"
 
 # Update README in cloned repo - copy there the differences of the file in this repo
 # Commit message and Workflow sub-sections (Hint: Try to use "head" or "tail" command + pipe "|" to redirect output)
 echo -e "${RED}Updated content of the README.md:${NC}"
-cat ../README.md | tail -n 76 >> README.md
+cat ../README.md | head -n 79 | tail -n +4 >> README.md
 
 # Add your change to git stage area
 echo -e "${RED}Added changes to stage area:${NC}"
@@ -48,7 +48,7 @@ git pull --rebase origin main
 
 # Push changes to origin
 echo -e "${RED}Pushed changes to origin${NC}"
-git push -u origin $new_branch_name
+git push -u origin "$new_branch_name"
 
 # Show git log with 5 latest commits
 echo -e "${RED}5 latest commits:${NC}"
@@ -106,7 +106,7 @@ git --no-pager diff HEAD~1 HEAD
 
 # Push changes to origin
 echo -e "${RED}Pushed to origin${NC}"
-git push -u origin $new_branch_name 
+git push -u origin "$new_branch_name" 
 
 # Switch to main branch
 echo -e "${RED}Switched to main branch${NC}"
@@ -114,7 +114,7 @@ git checkout main
 
 # Remove "update-readme" branch on origin and keep only the local one
 echo -e "${RED}Removed remote branch${NC}"
-git push origin --delete $new_branch_name
+git push origin --delete "$new_branch_name"
 
 # Remove repo
 working_dir=$(pwd)
