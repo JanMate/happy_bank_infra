@@ -39,13 +39,11 @@ jobs:
           
       - name: Set docker hub config due to docker script
         run: |
-          echo -n "{{ secrets.JM_DOCKER_USERNAME }}" > ~/docker_username
-          echo -n "{{ secrets.JM_DOCKER_TOKEN }}" > ~/docker_token
+          echo -en "{{ secrets.JM_DOCKER_USERNAME }}" > ~/docker_username
+          echo -en "{{ secrets.JM_DOCKER_TOKEN }}" > ~/docker_token
       
       - name: Run all shell scripts in this repo
-        run: |
-          find . -type f -and \( -name "*.sh" -and -not -name "run_docker.sh" \) -exec bash -c {} \;
-          ./run_docker.sh "$(cat ~/docker_username)" "$(cat ~/docker_token)"
+        run: find . -type f -and -name "*.sh" -exec bash -c {} \;
       
       - name: Clean git global config due to git clone script
         run: |
