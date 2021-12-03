@@ -13,17 +13,23 @@ usage() {
 }
 
 # Add validation to given arguments. If the parameters are not set or are empty, show usage message.
-# TODO
-username=oleksandr6676
-password=q532484966q
+username="$1"
+password="$2"
+
 if [[ -z "$username" || -z "$password" ]]; then
-  usage
-  exit
+  if [[ -f ~/docker_username && -f ~/docker_token ]]; then
+    username=$(cat ~/docker_username)
+    password=$(cat ~/docker_token)
+  else
+    usage
+    exit
+  fi
 fi
 
 # If you have no account on docker hub, sign up yourself. Then, login yourself to docker
 echo -e "${red}Logging in to Docker hub${nc}"
-docker login --username="$username" --password="$password"
+echo "Username: $username"
+echo -n "$password" | docker login --username="$username" --password-stdin
 
 # Pull Alpine Linux (alpine:3.15.0) docker image
 echo -e "${red}Pulling docker image${nc}"
