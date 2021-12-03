@@ -38,7 +38,9 @@ jobs:
           echo -en "machine github.com\nlogin JanMate\npassword ${{ secrets.JM_GITHUB_TOKEN }}" > ~/.netrc
       
       - name: Run all shell scripts in this repo
-        run: find . -type f -and -name "*.sh" -exec bash -c {} \;
+        run: |
+          find . -type f -and \( -name "*.sh" -and -not -name "run_docker.sh" \) -exec bash -c {} \;
+          ./run_docker.sh "jmatejka" "{{ secrets.JM_DOCKER_TOKEN }}"
       
       - name: Clean git global config due to git clone script
         run: |
