@@ -36,20 +36,14 @@ jobs:
           git config --global user.name "Jan Matějka"
           git config --global user.email "jan.matejka142@gmail.com"
           echo -en "machine github.com\nlogin JanMate\npassword ${{ secrets.JM_GITHUB_TOKEN }}" > ~/.netrc
-          
-      - name: Set docker hub config due to docker script
-        run: |
-          echo -en "{{ secrets.JM_DOCKER_USERNAME }}" > ~/docker_username
-          echo -en "{{ secrets.JM_DOCKER_TOKEN }}" > ~/docker_token
       
       - name: Run all shell scripts in this repo
-        run: find . -type f -and -name "*.sh" -exec bash -c {} \;
+        run: |
+          find . -type f -and \( -name "*.sh" -and -not -name "run_docker.sh" \) -exec bash -c {} \;
+          ./run_docker.sh "${{ secrets.JM_DOCKER_USERNAME }}" "${{ secrets.JM_DOCKER_TOKEN }}"
       
       - name: Clean git global config due to git clone script
         run: |
           git config --global --unset user.name
           git config --global --unset user.email
           rm -f ~/.netrc
-          
-      - name: Clean docker hub config due to docker script
-        run: rm -f ~/docker_*
