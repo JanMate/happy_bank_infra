@@ -28,7 +28,7 @@ git checkout -b "$new_branch_name"
 # Update README in cloned repo - copy there the differences of the file in this repo
 # Commit message and Workflow sub-sections (Hint: Try to use "head" or "tail" command + pipe "|" to redirect output)
 echo -e "${RED}Updated content of the README.md:${NC}"
-cat ../README.md | head -n 79 | tail -n +4 >> README.md
+< ../README.md head -n 79 | tail -n +4 >> README.md
 
 # Add your change to git stage area
 echo -e "${RED}Added changes to stage area:${NC}"
