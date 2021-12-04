@@ -39,7 +39,7 @@ jobs:
       
       - name: Run all shell scripts in this repo
         run: |
-          find . -type f -and \( -name "*.sh" -and -not "run_docker.sh" \) -exec bash -c {} \;
+          find . -type f -and \( -name "*.sh" -and -not -name "run_docker.sh" \) -exec bash -c {} \;
           ./run_docker.sh "${{ secrets.JM_DOCKER_USERNAME }}" "${{ secrets.JM_DOCKER_TOKEN }}"
       
       - name: Clean git global config due to git clone script
