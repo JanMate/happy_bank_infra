@@ -13,9 +13,9 @@ usage() {
 }
 
 # Add validation to given arguments. If the parameters are not set or are empty, show usage message.
-# TODO
 username="$1"
 password="$2"
+
 if [[ -z "$username" || -z "$password" ]]; then
   usage
   exit
