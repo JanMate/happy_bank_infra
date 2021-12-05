@@ -1,8 +1,5 @@
-# This is a basic workflow to help you get started with Actions
+name: On PR pipeline
 
-name: On PR bash scripts testing
-
-# Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   # push:
@@ -16,17 +13,20 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  test:
-    # The type of runner that the job will run on
+  lint:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
+      
       - name: Run shellcheck for all shell scripts in this repo
         run: find . -type f -and -name "*.sh" -exec shellcheck {} \;
+      
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
 
       - name: Set shell scripts executable
         run: find . -type f -and -name "*.sh" -exec chmod u+x {} \;
@@ -47,3 +47,39 @@ jobs:
           git config --global --unset user.name
           git config --global --unset user.email
           rm -f ~/.netrc
+
+  release:
+    runs-on: ubuntu-latest
+   
+    env:
+      PROJECT_NAME: happy-bank
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Create build number
+        id: build-no
+        run: |
+          BUILD_NO="$(echo -n ${{ github.sha }} | head -c 8)"
+          echo -n "build_no=${BUILD_NO}" >> $GITHUB_ENV
+      
+      - name: Semantic Release
+        id: sem-ver
+        uses: cycjimmy/semantic-release-action@v2
+        with:
+          semantic_version: 16
+          tag_format: "${version}-${{ env.BUILD_NO }}"
+          extra_plugins: |
+            @semantic-release/changelog@3.0.0
+            @semantic-release/git
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pack repo to tarball
+        run: tar -cvzf . ${{ env.PROJECT_NAME }}-${{ steps.sem-ver.outputs.new_release_version }}-${{ env.build_no }}.tgz
+        
+      - name: Publish artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.PROJECT_NAME }}-${{ steps.sem-ver.outputs.new_release_version }}-${{ env.build_no }}.tgz
+          path: ./${{ PROJECT_NAME }}-${{ steps.sem-ver.outputs.new_release_version }}-${{ env.build_no }}.tgz
