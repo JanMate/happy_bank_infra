@@ -82,4 +82,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.PROJECT_NAME }}-${{ steps.sem-ver.outputs.new_release_version }}-${{ env.build_no }}.tgz
-          path: ./${{ PROJECT_NAME }}-${{ steps.sem-ver.outputs.new_release_version }}-${{ env.build_no }}.tgz
+          path: ./${{ env.PROJECT_NAME }}-${{ steps.sem-ver.outputs.new_release_version }}-${{ env.build_no }}.tgz
