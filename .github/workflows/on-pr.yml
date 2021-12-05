@@ -63,6 +63,11 @@ jobs:
           BUILD_NO="$(echo -n ${{ github.sha }} | head -c 8)"
           echo -n "build_no=${BUILD_NO}" >> $GITHUB_ENV
       
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.5.0
+        with:
+          node-version: '14'
+
       - name: Semantic Release
         id: sem-ver
         uses: cycjimmy/semantic-release-action@v2
