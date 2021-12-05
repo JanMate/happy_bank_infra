@@ -9,14 +9,37 @@ Body paragraph.
 
 Mentioning issue ID
 ```
-**severity**: minor, major, critical<br>
-**mentioning** must contains keywords: closes, fixes, resolves
+**severity**: 
+ - BREAKING CHANGE - ensure updates major base: *1*.2.3
+ - feat - ensure updates minor base: 1.*2*.3
+ - fix, chore, test, perf, ci, style, doc - ensure updates patch base: 1.2.*3*
+ 
+**mentioning** must contains keywords:
+ - closes, 
+ - fixes, 
+ - resolves
 
 ### Example:
 ```
-minor: Add new connector
+BREAKING CHANGES: Remove path parameter of core deployment
+
+It removes path parameter replaced by url in core deployment.
+
+Closes #1
+```
+or
+```
+feat: Add new connector
 
 It adds new connector to connect DB.
+
+Closes #1
+```
+or
+```
+fix: Fix connector parameters
+
+It fixes parameters of connector to connect DB.
 
 Closes #1
 ```
