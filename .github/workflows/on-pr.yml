@@ -68,6 +68,9 @@ jobs:
         with:
           node-version: '14'
 
+      - name: Install sem-release plugins
+        run: npm install @semantic-release/git @semantic-release/changelog -D
+        
       - name: Semantic Release
         id: sem-ver
         uses: cycjimmy/semantic-release-action@v2
