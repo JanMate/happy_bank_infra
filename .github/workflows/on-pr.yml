@@ -68,17 +68,11 @@ jobs:
         with:
           node-version: '14'
 
-      - name: Install sem-release plugins
-        run: npm install @semantic-release/git @semantic-release/changelog -D
-        
       - name: Semantic Release
         id: sem-ver
         uses: cycjimmy/semantic-release-action@v2
         with:
           semantic_version: 16
-          extra_plugins: |
-            @semantic-release/changelog@3.0.0
-            @semantic-release/git
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
