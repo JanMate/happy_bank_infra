@@ -1,13 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: busybox-service  
+  name: busybox-svc  
   labels:
     app: busybox
 spec:
+  type: ClusterIP
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8080
+      targetPort: 80
   selector:
     app: busybox
