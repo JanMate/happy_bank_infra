@@ -1,0 +1,12 @@
+{
+  "release": {
+    "branches": [
+      "main",
+      "+([0-9a-zA-Z])?"
+    ],
+    "tagFormat": "${version}"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

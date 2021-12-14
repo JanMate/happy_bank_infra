@@ -59,47 +59,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-#      - uses: actions/setup-python@v2
-#        with:
-#          python-version: 3.8
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
 
-      - name: Create build number
-        id: build-no
-        if: github.event_name != 'push' || github.ref != 'refs/heads/master'
-        run: |
-          BUILD_NO="$(echo -n ${{ github.sha }} | head -c 8)"
-          echo -n "build_no=${BUILD_NO}" >> $GITHUB_ENV
-      
       - name: Semantic Release
-        uses: go-semantic-release/action@v1
+        uses: cycjimmy/semantic-release-action@v2
         id: semrel
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-#        FixMe !!!
-#        run: |
-#          pip install python-semantic-release
-#          git config user.name github-actions
-#          git config user.email github-actions@github.com
-#          RELEASE_VERSION=$(semantic-release print-version)
-#          echo -n "new_release_version=${RELEASE_VERSION}" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Pack repo to tarball
-#        if: steps.semrel.outputs.version != ''
+      - name: Do something when a new release published
+        if: steps.semrel.outputs.new_release_published == 'true'
         run: |
-          PROJECT_NAME=${{ env.PROJECT_NAME }}
-          RELEASE_VERSION=${{ steps.semrel.outputs.version }}
-          BUILD_NO=${{ env.build_no }}
-          if [[ -n ${BUILD_NO} ]]; then
-            TARBALL_NAME=${PROJECT_NAME}-${RELEASE_VERSION}-${BUILD_NO}.tgz
-          else
-            TARBALL_NAME=${PROJECT_NAME}-${RELEASE_VERSION}.tgz
-          fi
-          echo -n "tarball_name=${TARBALL_NAME}" >> $GITHUB_ENV
-          tar -cvzf . "${TARBALL_NAME}"
-
-      - name: Publish artifact
-        uses: actions/upload-artifact@v2
-#        if: steps.semrel.outputs.version != ''
-        with:
-          name: ${{ env.tarball_name }}
-          path: ./${{ env.tarball_name }}
+          echo ${{ steps.semrel.outputs.new_release_version }}
+          echo ${{ steps.semrel.outputs.new_release_major_version }}
+          echo ${{ steps.semrel.outputs.new_release_minor_version }}
+          echo ${{ steps.semrel.outputs.new_release_patch_version }}
