@@ -1,4 +1,5 @@
 {
+  "name": happy_bank_infra,
   "release": {
     "branches": [
       "main",
