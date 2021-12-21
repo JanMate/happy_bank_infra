@@ -48,7 +48,7 @@ Closes #1
 
 Example:
 ```
-WIP minor: Add new connector
+WIP feat: Add new connector
 
 It adds new connector to connect DB.
 
