@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: core-job
+spec:
+  completions: 1
+  backoffLimit: 2
+  template:
+    spec:
+      containers:
+        - name: curl-container
+          image: appropriate/curl
+          args:
+            - /bin/sh
+            - -c
+            - curl -v http://core-app-svc:80; sleep 20;
+      restartPolicy: OnFailure 
