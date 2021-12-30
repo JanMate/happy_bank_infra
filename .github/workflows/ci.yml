@@ -1,11 +1,13 @@
-name: On PR pipeline
+---
+# GitHub Actions CI pipeline definition
+name: CI pipeline
 
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -15,7 +17,7 @@ jobs:
   # This workflow contains a single job called "build"
   lint:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -31,7 +33,7 @@ jobs:
         uses: wagoid/commitlint-github-action@v2
 
   test:
-    needs: [ lint ]
+    needs: [lint]
     runs-on: ubuntu-latest
 
     steps:
@@ -44,13 +46,17 @@ jobs:
         run: |
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
-          echo -en "machine github.com\nlogin JanMate\npassword ${{ secrets.JM_GITHUB_TOKEN }}" > ~/.netrc
-      
+          echo -en "machine github.com\nlogin JanMate\npassword ${{ secrets.JM_GITHUB_TOKEN }}" \
+            > ~/.netrc
+
       - name: Run all shell scripts in this repo
         run: |
-          find . -type f -and \( -name "*.sh" -and -not -name "run_docker.sh" \) -exec bash -c {} \;
+          find . \
+            -type f \
+            -and \( -name "*.sh" -and -not -name "run_docker.sh" \) \
+            -exec bash -c {} \;
           ./run_docker.sh "${{ secrets.JM_DOCKER_USERNAME }}" "${{ secrets.JM_DOCKER_TOKEN }}"
-      
+
       - name: Clean git global config due to git clone script
         run: |
           git config --global --unset user.name
@@ -58,9 +64,9 @@ jobs:
           rm -f ~/.netrc
 
   release:
-    needs: [ lint, test ]
+    needs: [lint, test]
     runs-on: ubuntu-latest
-   
+
     env:
       PROJECT_NAME: happy-bank
 
