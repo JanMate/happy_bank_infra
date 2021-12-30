@@ -13,5 +13,5 @@ spec:
           args:
             - /bin/sh
             - -c
-            - curl -v http://core-app-svc:80; sleep 20;
+            - curl -v http://core-app-svc:5000/health;
       restartPolicy: OnFailure 
