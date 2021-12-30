@@ -23,14 +23,23 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check conventional commits
+        uses: wagoid/commitlint-github-action@v2
+
       - name: Run shellcheck for all shell scripts in this repo
         run: find . -type f -and -name "*.sh" -exec shellcheck {} \;
 
       - name: Check YAML files
         uses: ibiqlik/action-yamllint@v3.1.0
 
-      - name: Check conventional commits
-        uses: wagoid/commitlint-github-action@v2
+      - name: Kubernetes manifests validation (kubeval)
+        uses: lra/setup-kubeval@v1.0.1
+      - run: kubeval ./kubernetes/*.yml
+
+      - name: Kubernetes manifests validation (kube-score)
+        uses: piraces/kube-score-ga@v0.1.2
+        with:
+          manifests-folders: './kubernetes/*.yml'
 
   test:
     needs: [lint]
@@ -62,15 +71,6 @@ jobs:
           git config --global --unset user.name
           git config --global --unset user.email
           rm -f ~/.netrc
-
-      - name: Kubernetes manifests validation (kubeval)
-        uses: lra/setup-kubeval@v1.0.1
-      - run: kubeval ./kubernetes/*.yml
-
-      - name: Kubernetes manifests validation (kube-score)
-        uses: piraces/kube-score-ga@v0.1.2
-        with:
-          manifests-folders: './kubernetes/*.yml'
 
       - name: Kubernetes manifests dry-run verification
         if: 'false' # skip so far until a k8s cluster will be available
