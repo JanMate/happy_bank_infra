@@ -24,6 +24,9 @@ jobs:
       - name: Run shellcheck for all shell scripts in this repo
         run: find . -type f -and -name "*.sh" -exec shellcheck {} \;
 
+      - name: Check YAML files
+        uses: ibiqlik/action-yamllint@v3.1.0
+
       - name: Check conventional commits
         uses: wagoid/commitlint-github-action@v2
 
