@@ -72,6 +72,17 @@ jobs:
         with:
           manifests-folders: './kubernetes/*.yml'
 
+      - name: Kubernetes manifests dry-run verification
+        if: 'false' # skip so far until a k8s cluster will be available
+        uses: actions-hub/kubectl@v1.21.2
+        with:
+          args: apply -f ./kubernetes/ --dry-run
+
+      - name: Kubernetes manifests server-dry-run verification
+        if: 'false' # skip so far until a k8s cluster will be available
+        uses: actions-hub/kubectl@v1.21.2
+        with:
+          args: apply -f ./kubernetes/ --server-dry-run
 
   release:
     needs: [lint, test]
