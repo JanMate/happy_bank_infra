@@ -8,23 +8,17 @@ spec:
   containers:
   - name: core-app-container
     image: jmatejka/happy-bank-core:1.0.0
-    args:
-    - /bin/sh
-    - -c
-    - touch healthy; ls; sleep infinity;
     ports:
-     - containerPort: 80
+     - containerPort: 5000
     readinessProbe:
-      exec:
-        command:
-        - cat
-        - healthy
-      initialDelaySeconds: 15
-      periodSeconds: 10
+      httpGet:
+        path: /health
+        port: 5000
+      initialDelaySeconds: 5
+      timeoutSeconds: 40
     livenessProbe:
-      exec:
-        command:
-        - cat
-        - healthy
-      initialDelaySeconds: 20
-      periodSeconds: 10
+      httpGet:
+        path: /health
+        port: 5000
+      initialDelaySeconds: 10
+      timeoutSeconds: 40
