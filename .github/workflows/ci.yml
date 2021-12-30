@@ -63,6 +63,16 @@ jobs:
           git config --global --unset user.email
           rm -f ~/.netrc
 
+      - name: Kubernetes manifests validation (kubeval)
+        uses: lra/setup-kubeval@v1.0.1
+      - run: kubeval ./kubernetes/*.yml
+
+      - name: Kubernetes manifests validation (kube-score)
+        uses: piraces/kube-score-ga@v0.1.2
+        with:
+          manifests-folders: './kubernetes/*.yml'
+
+
   release:
     needs: [lint, test]
     runs-on: ubuntu-latest
