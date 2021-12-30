@@ -18,10 +18,15 @@ jobs:
     
     steps:
       - uses: actions/checkout@v2
-      
+        with:
+          fetch-depth: 0
+
       - name: Run shellcheck for all shell scripts in this repo
         run: find . -type f -and -name "*.sh" -exec shellcheck {} \;
-      
+
+      - name: Check conventional commits
+        uses: wagoid/commitlint-github-action@v2
+
   test:
     needs: [ lint ]
     runs-on: ubuntu-latest
