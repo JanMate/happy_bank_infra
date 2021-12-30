@@ -1,0 +1,29 @@
+version: "1.0"
+
+versioning:
+    update-major: [BREAKING CHANGE]
+    update-minor: [feat]
+    update-patch: [build, ci, chore, docs, fix, perf, refactor, style, test]
+    ignore-unknown: false
+
+tag:
+    pattern: 'v%d.%d.%d'
+
+release-notes:
+    headers:
+        breaking-change: Breaking Changes
+        feat: Features
+        fix: Bug Fixes
+
+commit-message:
+    types: [build, ci, chore, docs, feat, fix, perf, refactor, revert, style, test]
+    scope:
+        values: []
+    footer:
+        issue:
+            key: issue
+            key-synonyms: [Issue, ISSUE]
+            use-hash: false
+            add-value-prefix: ''
+    issue:
+        regex: '#?[0-9]+'
