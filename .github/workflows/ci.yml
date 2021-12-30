@@ -95,21 +95,67 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-go@v2
         with:
-          node-version: 16
+          go-version: '^1.13.1'
+      - run: go version
 
-      - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v2
-        id: semrel
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Semantic Version install
+        run: go install github.com/bvieira/sv4git/v2/cmd/git-sv@v2.5.0
 
-      - name: Do something when a new release published
-        if: steps.semrel.outputs.new_release_published == 'true'
+      - name: Show current version
+        run: git-sv current-version
+
+      - name: Show next version
         run: |
-          echo ${{ steps.semrel.outputs.new_release_version }}
-          echo ${{ steps.semrel.outputs.new_release_major_version }}
-          echo ${{ steps.semrel.outputs.new_release_minor_version }}
-          echo ${{ steps.semrel.outputs.new_release_patch_version }}
+          NEXT_VERSION="$(git-sv next-version)"
+          echo "${NEXT_VERSION}"
+          echo -n "next_version=${NEXT_VERSION}" >> $GITHUB_ENV
+
+      - name: Create build number
+        run: |
+          BUILD_NO="$(echo -n ${{ github.sha }} | head -c 8)"
+          echo -n "build_no=${BUILD_NO}" >> $GITHUB_ENV
+
+      - name: Set git global config due to git clone script
+        run: |
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+
+      - name: Create tag with build number
+        run: |
+          [[ ${{ github.event_name }} == 'push' && ${{ github.ref }} == 'refs/heads/main' ]] \
+            && TAG_BUILD_NO="${{ env.next_version }}" \
+            || TAG_BUILD_NO="${{ env.next_version }}-${{ env.build_no }}"
+          echo "$TAG_BUILD_NO"
+          echo -n "tag_build_no=${TAG_BUILD_NO}" >> $GITHUB_ENV
+
+      - name: Create new tag
+        run: |
+          git tag \
+            -a "${{ env.tag_build_no }}" \
+            -m "$PROJECT_NAME ${{ env.tag_build_no }}"
+          git push origin "${{ env.tag_build_no }}"
+
+      - name: Create artifact name
+        run: |
+          ARTIFACT_NAME="${{ env.PROJECT_NAME }}-${{ env.tag_build_no }}"
+          echo "${ARTIFACT_NAME}"
+          echo -n "artifact_name=${ARTIFACT_NAME}" >> $GITHUB_ENV
+
+      - name: Clean git global config due to git clone script
+        run: |
+          git config --global --unset user.name
+          git config --global --unset user.email
+
+      - name: Pack repo to zip
+        run: |
+          FOLDERS=("./helm/" "./kubernetes/")
+          SCRIPTS=("./clone_update_repo.sh" "./deploy.sh" "./run_docker.sh")
+          zip -r ${{ env.artifact_name }}.zip ${FOLDERS[@]} ${SCRIPTS[@]}
+
+      - name: Publish artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.artifact_name }}.zip
+          path: ./${{ env.artifact_name }}.zip
