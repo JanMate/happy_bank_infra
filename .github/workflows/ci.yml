@@ -23,7 +23,7 @@ jobs:
         run: find . -type f -and -name "*.sh" -exec shellcheck {} \;
       
   test:
-    needs: lint
+    needs: [ lint ]
     runs-on: ubuntu-latest
 
     steps:
@@ -50,7 +50,7 @@ jobs:
           rm -f ~/.netrc
 
   release:
-    needs: test
+    needs: [ lint, test ]
     runs-on: ubuntu-latest
    
     env:
