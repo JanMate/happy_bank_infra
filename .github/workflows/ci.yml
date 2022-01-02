@@ -98,11 +98,11 @@ jobs:
 
       - uses: actions/setup-go@v2
         with:
-          go-version: '^1.13.1'
+          go-version: '^1.16'
       - run: go version
 
       - name: Semantic Version install
-        run: go install github.com/bvieira/sv4git/v2/cmd/git-sv@v2.5.0
+        run: go install github.com/bvieira/sv4git/v2/cmd/git-sv@latest
 
       - name: Show current version
         run: git-sv current-version
