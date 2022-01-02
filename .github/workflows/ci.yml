@@ -88,6 +88,7 @@ jobs:
   release:
     needs: [lint, test]
     runs-on: ubuntu-latest
+#    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     env:
       PROJECT_NAME: happy-bank
@@ -122,24 +123,12 @@ jobs:
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
 
-      - name: Create tag with build number
-        run: |
-          [[ ${{ github.event_name }} == 'push' && ${{ github.ref }} == 'refs/heads/main' ]] \
-            && TAG_BUILD_NO="${{ env.next_version }}" \
-            || TAG_BUILD_NO="${{ env.next_version }}-${{ env.build_no }}"
-          echo "$TAG_BUILD_NO"
-          echo -n "tag_build_no=${TAG_BUILD_NO}" >> $GITHUB_ENV
-
       - name: Create new tag
-        run: |
-          git tag \
-            -a "${{ env.tag_build_no }}" \
-            -m "$PROJECT_NAME ${{ env.tag_build_no }}"
-          git push origin "${{ env.tag_build_no }}"
+        run: git-sv tag
 
       - name: Create artifact name
         run: |
-          ARTIFACT_NAME="${{ env.PROJECT_NAME }}-${{ env.tag_build_no }}"
+          ARTIFACT_NAME="${{ env.PROJECT_NAME }}-${{ env.next_version }}"
           echo "${ARTIFACT_NAME}"
           echo -n "artifact_name=${ARTIFACT_NAME}" >> $GITHUB_ENV
 
