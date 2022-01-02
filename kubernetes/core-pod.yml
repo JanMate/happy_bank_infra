@@ -25,7 +25,9 @@ spec:
         timeoutSeconds: 40
       volumeMounts:
         - name: core-volume
-          mountPath: /core/data/memory.py
+          mountPath: /app-data/transactions.json
+        - name: core-volume
+          mountPath: /app-data/users.json
   volumes:
     - name: core-volume
       persistentVolumeClaim:
