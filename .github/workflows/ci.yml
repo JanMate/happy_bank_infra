@@ -148,3 +148,15 @@ jobs:
         with:
           name: ${{ env.artifact_name }}.zip
           path: ./${{ env.artifact_name }}.zip
+
+      - name: Create release notes
+        run: git sv rn -t "$({{ env.next_version }})" > release-notes.md
+
+      - name: Release GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: release-notes.md
+          tag_name: ${{ env.next_version }}
+          fail_on_unmatched_files: true
+          files: |
+            ${{ env.artifact_name }}.zip
