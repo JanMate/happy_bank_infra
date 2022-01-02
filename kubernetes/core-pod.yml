@@ -23,3 +23,10 @@ spec:
           port: 5000
         initialDelaySeconds: 10
         timeoutSeconds: 40
+      volumeMounts:
+        - name: core-volume
+          mountPath: /core/data/memory.py
+  volumes:
+    - name: core-volume
+      persistentVolumeClaim:
+        claimName: core-pvc
