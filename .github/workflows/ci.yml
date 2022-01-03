@@ -130,6 +130,12 @@ jobs:
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
 
+      - name: Show local tags and fetch remote tags
+        run: |
+          git tag -l
+          git fetch --tags
+          git tag -l
+
       - name: Create new tag
         run: git-sv tag
 
