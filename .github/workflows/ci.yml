@@ -34,7 +34,9 @@ jobs:
 
       - name: Kubernetes manifests validation (kubeval)
         uses: lra/setup-kubeval@v1.0.1
-      - run: kubeval ./kubernetes/*.yml
+      - run: |
+          LOCATION="https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master"
+          kubeval --schema-location "${LOCATION}" -d "./kubernetes/"
 
       - name: Kubernetes manifests validation (kube-score)
         uses: piraces/kube-score-ga@v0.1.2
