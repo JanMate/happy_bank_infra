@@ -12,15 +12,15 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: /data/core-pv
-    
+
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
-metadata: 
+metadata:
   name: core-pvc
-spec: 
+spec:
   storageClassName: hostpath
-  accessModes: 
+  accessModes:
     - ReadWriteOnce
   resources:
     requests:
