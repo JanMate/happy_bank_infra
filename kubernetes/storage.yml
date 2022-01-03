@@ -12,6 +12,7 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: /data/core-pv
+    
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
