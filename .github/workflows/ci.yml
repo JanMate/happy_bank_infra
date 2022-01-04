@@ -104,14 +104,7 @@ jobs:
       - run: go version
 
       - name: Semantic Version install
-        run: |
-          curl -s https://api.github.com/repos/bvieira/sv4git/releases/latest | \
-            jq -r '.assets[] | \
-            select(.browser_download_url | \
-            contains("linux")) | \
-            .browser_download_url' | \
-            wget -O /tmp/sv4git.tar.gz -qi - \
-            && tar -C /usr/local/bin -xzf /tmp/sv4git.tar.gz
+        run: go install github.com/bvieira/sv4git/v2/cmd/git-sv@latest
 
       - name: Show current version
         run: git-sv current-version
