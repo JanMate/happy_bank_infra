@@ -106,6 +106,16 @@ jobs:
       - name: Semantic Version install
         run: go install github.com/bvieira/sv4git/v2/cmd/git-sv@latest
 
+      - name: Set git global config due to git clone script
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Show local tags and fetch remote tags
+        run: |
+          git fetch --tags
+          git tag -l
+
       - name: Show current version
         run: git-sv current-version
 
@@ -115,22 +125,6 @@ jobs:
           echo "${NEXT_VERSION}"
           echo -n "next_version=${NEXT_VERSION}" >> $GITHUB_ENV
 
-      - name: Create build number
-        run: |
-          BUILD_NO="$(echo -n ${{ github.sha }} | head -c 8)"
-          echo -n "build_no=${BUILD_NO}" >> $GITHUB_ENV
-
-      - name: Set git global config due to git clone script
-        run: |
-          git config --global user.name github-actions
-          git config --global user.email github-actions@github.com
-
-      - name: Show local tags and fetch remote tags
-        run: |
-          git tag -l
-          git fetch --tags
-          git tag -l
-
       - name: Create new tag
         run: git-sv tag
 
@@ -139,11 +133,6 @@ jobs:
           ARTIFACT_NAME="${{ env.PROJECT_NAME }}-${{ env.next_version }}"
           echo "${ARTIFACT_NAME}"
           echo -n "artifact_name=${ARTIFACT_NAME}" >> $GITHUB_ENV
-
-      - name: Clean git global config due to git clone script
-        run: |
-          git config --global --unset user.name
-          git config --global --unset user.email
 
       - name: Pack repo to zip
         run: |
