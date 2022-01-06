@@ -7,7 +7,7 @@ versioning:
     ignore-unknown: false
 
 tag:
-    pattern: '%d.%d.%d'
+    pattern: 'v%d.%d.%d'
 
 release-notes:
     headers:
