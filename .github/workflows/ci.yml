@@ -112,11 +112,6 @@ jobs:
           curl -s https://api.github.com/repos/bvieira/sv4git/releases/latest | jq -r '.assets[] | select(.browser_download_url | contains("linux")) | .browser_download_url' | wget -O /tmp/sv4git.tar.gz -qi - \
             && tar -C /usr/local/bin -xzf /tmp/sv4git.tar.gz
 
-      - name: Show local tags and fetch remote tags
-        run: |
-          git fetch --tags
-          git tag -l
-
       - name: Show current version
         run: git-sv current-version
 
@@ -171,11 +166,6 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-
-      - name: Show local tags and fetch remote tags
-        run: |
-          git fetch --tags
-          git tag -l
 
       - name: Show current version
         run: git-sv current-version
