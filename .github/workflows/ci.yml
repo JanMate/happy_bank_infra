@@ -87,6 +87,57 @@ jobs:
         with:
           args: apply -f ./kubernetes/ --server-dry-run
 
+  prerelease:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    if: ${{ !(github.event_name == 'push' && github.ref == 'refs/heads/main') }}
+
+    env:
+      PROJECT_NAME: happy-bank
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.16'
+      - run: go version
+
+      - name: Semantic Version install
+        run: go install github.com/bvieira/sv4git/v2/cmd/git-sv@latest
+
+      - name: Show local tags and fetch remote tags
+        run: |
+          git fetch --tags
+          git tag -l
+
+      - name: Show current version
+        run: git-sv current-version
+
+      - name: Show next version
+        run: |
+          NEXT_VERSION="$(git-sv next-version)"
+          echo "${NEXT_VERSION}"
+          echo -n "next_version=${NEXT_VERSION}" >> $GITHUB_ENV
+
+      - name: Create artifact name
+        run: |
+          ARTIFACT_NAME="${{ env.PROJECT_NAME }}-${{ env.next_version }}-prerelease"
+          echo "${ARTIFACT_NAME}"
+          echo -n "artifact_name=${ARTIFACT_NAME}" >> $GITHUB_ENV
+
+      - name: Pack repo to zip
+        run: |
+          FOLDERS=("./helm/" "./kubernetes/")
+          SCRIPTS=("./clone_update_repo.sh" "./deploy.sh" "./run_docker.sh")
+          zip -r ${{ env.artifact_name }}.zip ${FOLDERS[@]} ${SCRIPTS[@]}
+
+      - name: Publish artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.artifact_name }}.zip
+          path: ./${{ env.artifact_name }}.zip
+
   release:
     needs: [lint, test]
     runs-on: ubuntu-latest
