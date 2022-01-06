@@ -31,6 +31,8 @@ jobs:
 
       - name: Check YAML files
         uses: ibiqlik/action-yamllint@v3.1.0
+        with:
+          file_or_dir: kubernetes/ helm/
 
       - name: Kubernetes manifests validation (kubeval)
         uses: lra/setup-kubeval@v1.0.1
@@ -104,7 +106,9 @@ jobs:
       - run: go version
 
       - name: Semantic Version install
-        run: go install github.com/bvieira/sv4git/v2/cmd/git-sv@latest
+        run: |
+          curl -s https://api.github.com/repos/bvieira/sv4git/releases/latest | jq -r '.assets[] | select(.browser_download_url | contains("linux")) | .browser_download_url' | wget -O /tmp/sv4git.tar.gz -qi - \
+            && tar -C /usr/local/bin -xzf /tmp/sv4git.tar.gz
 
       - name: Show local tags and fetch remote tags
         run: |
@@ -155,7 +159,9 @@ jobs:
       - run: go version
 
       - name: Semantic Version install
-        run: go install github.com/bvieira/sv4git/v2/cmd/git-sv@latest
+        run: |
+          curl -s https://api.github.com/repos/bvieira/sv4git/releases/latest | jq -r '.assets[] | select(.browser_download_url | contains("linux")) | .browser_download_url' | wget -O /tmp/sv4git.tar.gz -qi - \
+            && tar -C /usr/local/bin -xzf /tmp/sv4git.tar.gz
 
       - name: Set git global config due to git clone script
         run: |
@@ -204,7 +210,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           body_path: release-notes.md
-          tag_name: ${{ env.next_version }}
+          tag_name: v${{ env.next_version }}
           fail_on_unmatched_files: true
           files: |
             ${{ env.artifact_name }}.zip
