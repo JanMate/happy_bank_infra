@@ -122,11 +122,11 @@ jobs:
         run: |
           NEXT_VERSION="$(git-sv next-version)"
           echo "${NEXT_VERSION}"
-          echo -n "next_version=${NEXT_VERSION}" >> $GITHUB_ENV
+          echo -n "next_version=v${NEXT_VERSION}" >> $GITHUB_ENV
 
       - name: Create artifact name
         run: |
-          ARTIFACT_NAME="${{ env.PROJECT_NAME }}-v${{ env.next_version }}-prerelease"
+          ARTIFACT_NAME="${{ env.PROJECT_NAME }}-${{ env.next_version }}-prerelease"
           echo "${ARTIFACT_NAME}"
           echo -n "artifact_name=${ARTIFACT_NAME}" >> $GITHUB_ENV
 
@@ -180,14 +180,14 @@ jobs:
         run: |
           NEXT_VERSION="$(git-sv next-version)"
           echo "${NEXT_VERSION}"
-          echo -n "next_version=${NEXT_VERSION}" >> $GITHUB_ENV
+          echo -n "next_version=v${NEXT_VERSION}" >> $GITHUB_ENV
 
       - name: Create new tag
         run: git-sv tag
 
       - name: Create artifact name
         run: |
-          ARTIFACT_NAME="${{ env.PROJECT_NAME }}-v${{ env.next_version }}"
+          ARTIFACT_NAME="${{ env.PROJECT_NAME }}-${{ env.next_version }}"
           echo "${ARTIFACT_NAME}"
           echo -n "artifact_name=${ARTIFACT_NAME}" >> $GITHUB_ENV
 
@@ -210,7 +210,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           body_path: release-notes.md
-          tag_name: v${{ env.next_version }}
+          tag_name: ${{ env.next_version }}
           fail_on_unmatched_files: true
           files: |
             ${{ env.artifact_name }}.zip
