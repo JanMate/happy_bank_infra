@@ -6,9 +6,11 @@ metadata:
   labels:
     app: core-app
 spec:
+  securityContext:
+    fsGroup: 123
   containers:
     - name: core-app-container
-      image: jmatejka/happy-bank-core:1.0.0
+      image: oleksandr6676/flask_image:2.0.0
       ports:
         - containerPort: 5000
       readinessProbe:
@@ -25,9 +27,7 @@ spec:
         timeoutSeconds: 40
       volumeMounts:
         - name: core-volume
-          mountPath: /app-data/transactions.json
-        - name: core-volume
-          mountPath: /app-data/users.json
+          mountPath: /app-data/
   volumes:
     - name: core-volume
       persistentVolumeClaim:
