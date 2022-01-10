@@ -10,7 +10,7 @@ spec:
     fsGroup: 123
   containers:
     - name: core-app-container
-      image: jmatejka/happy-bank-core:1.0.0
+      image: jmatejka/happy-bank-core:0.2.1
       ports:
         - containerPort: 5000
       readinessProbe:
