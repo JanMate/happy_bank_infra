@@ -27,7 +27,7 @@ spec:
         timeoutSeconds: 40
       volumeMounts:
         - name: core-volume
-          mountPath: /app-data/
+          mountPath: /data
   volumes:
     - name: core-volume
       persistentVolumeClaim:
