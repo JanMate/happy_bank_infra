@@ -3,7 +3,7 @@ This repo contains the simple example of bank infrastructure.
 
 ## Commit message format:
 ```
-severity: Header sentence
+severity: header sentence
 
 Body paragraph.
 
@@ -21,7 +21,7 @@ Mentioning issue ID
 
 ### Example:
 ```
-BREAKING CHANGES: Remove path parameter of core deployment
+BREAKING CHANGES: remove path parameter of core deployment
 
 It removes path parameter replaced by url in core deployment.
 
@@ -29,7 +29,7 @@ Closes #1
 ```
 or
 ```
-feat: Add new connector
+feat: add new connector
 
 It adds new connector to connect DB.
 
@@ -37,7 +37,7 @@ Closes #1
 ```
 or
 ```
-fix: Fix connector parameters
+fix: fix connector parameters
 
 It fixes parameters of connector to connect DB.
 
@@ -48,7 +48,7 @@ Closes #1
 
 Example:
 ```
-WIP feat: Add new connector
+feat: WIP add new connector
 
 It adds new connector to connect DB.
 
