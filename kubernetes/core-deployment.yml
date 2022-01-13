@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: core-deployment
+  labels:
+    app: core-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: core-app
+  template:
+    metadata:
+      name: core-pod
+      labels:
+        app: core-app
+    spec:
+      securityContext:
+        fsGroup: 123
+      containers:
+        - name: core-app-container
+          image: jmatejka/happy-bank-core:0.2.1
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            timeoutSeconds: 40
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            timeoutSeconds: 40
+          volumeMounts:
+            - name: core-volume
+              mountPath: /data
+      volumes:
+        - name: core-volume
+          persistentVolumeClaim:
+            claimName: core-pvc
