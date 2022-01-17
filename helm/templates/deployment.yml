@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-deployment
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      name: {{ .Release.Name }}-pod
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      securityContext:
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+      containers:
+        - name: {{ .Release.Name }}-container
+          image: {{ .Values.container.image }}:{{ .Values.container.tag }}
+          ports:
+            - containerPort: {{ .Values.container.containerPort }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.container.healthEndpoint }}
+              port: {{ .Values.container.containerPort }}
+            initialDelaySeconds: 5
+            timeoutSeconds: 40
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.container.healthEndpoint }}
+              port: {{ .Values.container.containerPort }}
+            initialDelaySeconds: 10
+            timeoutSeconds: 40
+          volumeMounts:
+            - name: {{ .Release.Name }}-volume
+              mountPath: {{ .Values.container.volumeMountPath }}
+      volumes:
+        - name: {{ .Release.Name }}-volume
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-pvc
