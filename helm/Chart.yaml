@@ -1,0 +1,8 @@
+--- 
+apiVersion: v2
+appVersion: "0.2.1"
+description: "Happy-Bank application Helm Chart for kubernetes"
+name: Happy-Bank
+type: application
+version: "0.1.0"
+
