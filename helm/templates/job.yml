@@ -1,0 +1,17 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{.Release.Name}}-job
+spec:
+  completions: {{.Values.job.completions}}
+  backoffLimit: {{.Values.job.backoffLimit}}
+  template:
+    spec:
+      containers:
+        - name: {{.Values.job.containerName}}
+          image: {{.Values.job.image}}
+          args:
+            - -v
+            - http://{{.Release.Name}}-svc:{{.Values.service.port}}{{.Values.container.healthEndpoint}}
+      restartPolicy: {{.Values.job.restartPolicy}}
