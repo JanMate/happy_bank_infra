@@ -38,7 +38,17 @@ spec:
           volumeMounts:
             - name: core-volume
               mountPath: /data
+            - name: core-secret
+              mountPath: /app-token
+            - name: redis-config
+              mountPath: /redis-config
       volumes:
         - name: core-volume
           persistentVolumeClaim:
             claimName: core-pvc
+        - name: core-secret
+          secret:
+            secretName: core-secret
+        - name: redis-config
+          configMap:
+            name: redis-configmap
