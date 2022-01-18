@@ -34,6 +34,12 @@ jobs:
         with:
           file_or_dir: kubernetes/
 
+      - name: Helm Templates Validation
+        uses: igabaydulin/helm-check-action@0.1.4
+        env:
+          CHART_LOCATION: ./helm
+          CHART_VALUES: ./helm/values.yaml
+
       - name: Kubernetes manifests validation (kubeval)
         uses: lra/setup-kubeval@v1.0.1
       - run: |
