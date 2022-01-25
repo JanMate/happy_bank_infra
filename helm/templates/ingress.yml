@@ -12,6 +12,6 @@ spec:
               service:
                 name: {{.Release.Name}}-svc
                 port:
-                  number: {{.Values.service.port}}
+                  number: {{.Values.container.containerPort}}
             path: {{.Values.container.healthEndpoint}}
             pathType: {{.Values.ingress.pathType}}

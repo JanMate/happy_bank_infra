@@ -13,5 +13,5 @@ spec:
           image: {{.Values.job.image}}
           args:
             - -v
-            - http://{{.Release.Name}}-svc:{{.Values.service.port}}{{.Values.container.healthEndpoint}}
+            - http://{{.Release.Name}}-svc:{{.Values.container.containerPort}}{{.Values.container.healthEndpoint}}
       restartPolicy: {{.Values.job.restartPolicy}}
