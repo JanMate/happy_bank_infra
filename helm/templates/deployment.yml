@@ -38,7 +38,17 @@ spec:
           volumeMounts:
             - name: {{.Release.Name}}-volume
               mountPath: {{.Values.core.container.volumeMountPath}}
+            - name: {{.Release.Name}}-secret
+              mountPath: {{.Values.core.container.secretMountPath}}
+            - name: {{.Release.Name}}-config
+              mountPath: {{.Values.core.container.redisMountPath}}
       volumes:
         - name: {{.Release.Name}}-volume
           persistentVolumeClaim:
             claimName: {{.Release.Name}}-pvc
+        - name: {{.Release.Name}}-secret
+          secret:
+            secretName: {{.Release.Name}}-secret
+        - name: {{.Release.Name}}-config
+          configMap:
+            name: {{.Release.Name}}-configmap
