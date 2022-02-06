@@ -1,52 +1,41 @@
 ---
-replicaCount: 1
+core:
+  replicaCount: 1
 
-securityContext:
-  fsGroup: 123
+  container:
+    image: jmatejka/happy-bank-core
+    tag: 0.2.1
+    port: 5000
+    volumeMountPath: /data
+    healthEndpoint: /health
 
-container:
-  image: jmatejka/happy-bank-core
-  tag: 0.2.1
-  containerPort: 5000
-  volumeMountPath: /data
-  healthEndpoint: /health
+  persistentVol:
+    accessMode: ReadWriteOnce
+    capacity: 1Gi
+    localPath: /data
+    node: minikube
+    reclaimPolicy: Retain
+    storageClass: local-storage
 
-storageClass:
-  provisioner: kubernetes.io/no-provisioner
-  volumeBindingMode: WaitForFirstConsumer
+  persistentVolClaim:
+    accessMode: ReadWriteOnce
+    capacity: 1Gi
+    storageClass: local-storage
 
-persistentVol:
-  accessMode: ReadWriteOnce
-  capacity: 1Gi
-  localPath: /data
-  node: minikube
-  reclaimPolicy: Retain
-  storageClass: local-storage
+  ingress:
+    dnsName: core.happybank.io
 
-persistentVolClaim:
-  accessMode: ReadWriteOnce
-  capacity: 1Gi
-  storageClass: local-storage
+  secret:
+    type: Opaque
+    token: PENPUkVfVE9LRU4+
 
-service:
-  protocol: TCP
-  type: ClusterIP
+  redis:
+    host: 127.0.0.1
+    port: 6379
 
-ingress:
-  host: core.happybank.io
-  pathType: Prefix
-
-secret:
-  type: Opaque
-  token: PENPUkVfVE9LRU4+
-
-config:
-  host: 127.0.0.1
-  port: 6379
-
-job:
-  completions: 1
-  backoffLimit: 2
-  containerName: curl-container
-  image: appropriate/curl
-  restartPolicy: OnFailure
+  verification:
+    completions: 1
+    backoffLimit: 2
+    containerName: curl-container
+    image: appropriate/curl
+    restartPolicy: OnFailure

@@ -3,8 +3,8 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: {{.Release.Name}}-local-storage
-provisioner: {{.Values.storageClass.provisioner}}
-volumeBindingMode: {{.Values.storageClass.volumeBindingMode}}
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
 
 ---
 apiVersion: v1
@@ -13,11 +13,11 @@ metadata:
   name: {{.Release.Name}}-pv
 spec:
   accessModes:
-    - {{.Values.persistentVol.accessMode}}
+    - {{.Values.core.persistentVol.accessMode}}
   capacity:
-    storage: {{.Values.persistentVol.capacity}}
+    storage: {{.Values.core.persistentVol.capacity}}
   local:
-    path: {{.Values.persistentVol.localPath}}
+    path: {{.Values.core.persistentVol.localPath}}
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -27,9 +27,9 @@ spec:
               key: kubernetes.io/hostname
               operator: In
               values:
-                - {{.Values.persistentVol.node}}
-  persistentVolumeReclaimPolicy: {{.Values.persistentVol.reclaimPolicy}}
-  storageClassName: {{.Values.persistentVol.storageClass}}
+                - {{.Values.core.persistentVol.node}}
+  persistentVolumeReclaimPolicy: {{.Values.core.persistentVol.reclaimPolicy}}
+  storageClassName: {{.Values.core.persistentVol.storageClass}}
 
 ---
 apiVersion: v1
@@ -38,8 +38,8 @@ metadata:
   name: {{.Release.Name}}-pvc
 spec:
   accessModes:
-    - {{.Values.persistentVolClaim.accessMode}}
+    - {{.Values.core.persistentVolClaim.accessMode}}
   resources:
     requests:
-      storage: {{.Values.persistentVolClaim.capacity}}
-  storageClassName: {{.Values.persistentVolClaim.storageClass}}
+      storage: {{.Values.core.persistentVolClaim.capacity}}
+  storageClassName: {{.Values.core.persistentVolClaim.storageClass}}

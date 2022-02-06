@@ -4,14 +4,14 @@ kind: Job
 metadata:
   name: {{.Release.Name}}-job
 spec:
-  completions: {{.Values.job.completions}}
-  backoffLimit: {{.Values.job.backoffLimit}}
+  completions: {{.Values.core.verification.completions}}
+  backoffLimit: {{.Values.core.verification.backoffLimit}}
   template:
     spec:
       containers:
-        - name: {{.Values.job.containerName}}
-          image: {{.Values.job.image}}
+        - name: {{.Values.core.verification.containerName}}
+          image: {{.Values.core.verification.image}}
           args:
             - -v
-            - http://{{.Release.Name}}-svc:{{.Values.container.containerPort}}{{.Values.container.healthEndpoint}}
-      restartPolicy: {{.Values.job.restartPolicy}}
+            - http://{{.Release.Name}}-svc:{{.Values.core.container.port}}{{.Values.core.container.healthEndpoint}}
+      restartPolicy: {{.Values.core.verification.restartPolicy}}

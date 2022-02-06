@@ -6,7 +6,7 @@ metadata:
   labels:
     app: {{.Release.Name}}
 spec:
-  replicas: {{.Values.replicaCount}}
+  replicas: {{.Values.core.replicaCount}}
   selector:
     matchLabels:
       app: {{.Release.Name}}
@@ -17,27 +17,27 @@ spec:
         app: {{.Release.Name}}
     spec:
       securityContext:
-        fsGroup: {{.Values.securityContext.fsGroup}}
+        fsGroup: 123
       containers:
         - name: {{.Release.Name}}-container
-          image: {{.Values.container.image}}:{{.Values.container.tag}}
+          image: {{.Values.core.container.image}}:{{.Values.core.container.tag}}
           ports:
-            - containerPort: {{.Values.container.containerPort}}
+            - containerPort: {{.Values.core.container.port}}
           readinessProbe:
             httpGet:
-              path: {{.Values.container.healthEndpoint}}
-              port: {{.Values.container.containerPort}}
+              path: {{.Values.core.container.healthEndpoint}}
+              port: {{.Values.core.container.port}}
             initialDelaySeconds: 5
             timeoutSeconds: 40
           livenessProbe:
             httpGet:
-              path: {{.Values.container.healthEndpoint}}
-              port: {{.Values.container.containerPort}}
+              path: {{.Values.core.container.healthEndpoint}}
+              port: {{.Values.core.container.port}}
             initialDelaySeconds: 10
             timeoutSeconds: 40
           volumeMounts:
             - name: {{.Release.Name}}-volume
-              mountPath: {{.Values.container.volumeMountPath}}
+              mountPath: {{.Values.core.container.volumeMountPath}}
       volumes:
         - name: {{.Release.Name}}-volume
           persistentVolumeClaim:

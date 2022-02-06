@@ -5,13 +5,13 @@ metadata:
   name: {{.Release.Name}}-ingress
 spec:
   rules:
-    - host: {{.Values.ingress.host}}
+    - host: {{.Values.core.ingress.dnsName}}
       http:
         paths:
           - backend:
               service:
                 name: {{.Release.Name}}-svc
                 port:
-                  number: {{.Values.container.containerPort}}
-            path: {{.Values.container.healthEndpoint}}
-            pathType: {{.Values.ingress.pathType}}
+                  number: {{.Values.core.container.port}}
+            path: {{.Values.core.container.healthEndpoint}}
+            pathType: Prefix
