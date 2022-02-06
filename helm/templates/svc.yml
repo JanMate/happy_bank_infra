@@ -6,10 +6,10 @@ metadata:
   labels:
     app: {{.Release.Name}}
 spec:
-  type: {{.Values.service.type}}
+  type: ClusterIP
   ports:
-    - protocol: {{.Values.service.protocol}}
-      port: {{.Values.container.containerPort}}
-      targetPort: {{.Values.container.containerPort}}
+    - protocol: TCP
+      port: {{.Values.core.container.port}}
+      targetPort: {{.Values.core.container.port}}
   selector:
     app: {{.Release.Name}}

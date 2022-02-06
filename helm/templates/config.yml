@@ -4,5 +4,5 @@ kind: ConfigMap
 metadata:
   name: {{.Release.Name}}-configmap
 data:
-  host: {{.Values.config.host | quote}}
-  port: {{.Values.config.port | quote}}
+  host: {{.Values.core.redis.host | quote}}
+  port: {{.Values.core.redis.port | quote}}
