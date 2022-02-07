@@ -29,7 +29,7 @@ core:
 
   secret:
     type: Opaque
-    token: PENPUkVfVE9LRU4+
+    token: <CORE_TOKEN>
 
   redis:
     host: 127.0.0.1
