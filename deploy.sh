@@ -6,7 +6,7 @@ NC='\033[0m'
 
 check_if_exists_func()
 {
-  get_resource=$(kubectl get "$1" | grep "$2")
+  get_resource=$(kubectl get "$1" "$2" --no-headers 2>/dev/null)
   if [ -n "${get_resource}" ]; then
     echo "$get_resource"
   else
@@ -22,7 +22,6 @@ echo -e "${RED}Script started at $(date +%T)${NC}"
 # Generate secret token and pass it to secret.yml
 echo -e "${RED}Generating secret token${NC}"
 token="$(date +%T | sha1sum | awk '{print $1}')"
-echo "$token"
 sed -i "s/<CORE_TOKEN>/$token/g" ./kubernetes/core-secret.yml
 
 # Deploy and verify storage resources
